@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import threading
-from http.cookies import SimpleCookie
+from Cookie import SimpleCookie
 import cgi
 
 class Request(threading.local):
     def bind(self, environ):
+        """
+        绑定一个环境变量，设置GET、POST、COOKIE及path
+        """
         self._environ = environ
-        self.environ = self._environ
+        self.environ = environ
         self._GET = None
         self._POST = None
         self._COOKIES = None
@@ -16,14 +19,21 @@ class Request(threading.local):
 
     @property
     def method(self):
+        """
+        获取请求方法，默认GET
+        """
         return self._environ.get('REQUEST_METHOD', 'GET').upper()
 
     @property
     def query_string(self):
+        """
+        获取query string，默认为空
+        """
         return self._environ.get('QUERY_STRING', '')
 
     @property
     def input_length(self):
+        "获取输入长度，默认为0"
         try:
             return int(self._environ.get('CONTENT_LENGTH', '0'))
         except ValueError:
@@ -35,7 +45,7 @@ class Request(threading.local):
         if self._GET is None:
             data = cgi.parse_qs(self.query_string, keep_blank_values=True)
             self._GET = {}
-            for key, value in data.iteritems():
+            for key, value in data.items():
                 if len(value) == 1:
                     self._GET[key] = value[0]
                 else:

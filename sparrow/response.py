@@ -1,5 +1,6 @@
 import threading
 from wsgiref.headers import Headers as HeaderWrapper
+from Cookie import SimpleCookie
 
 class Response(threading.local):
     """ Represents a single response using thread-local namespace. """
